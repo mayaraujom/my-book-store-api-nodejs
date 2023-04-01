@@ -28,8 +28,18 @@ const GetClienteById = async (req, res) => {
 
 const CreateCliente = async (req, res) => {
   try {
-    const token = await clienteService.createCliente(req.body);
-    return res.status(201).json({ token });
+    const tokenAndCliente = await clienteService.createCliente(req.body);
+    return res.status(201).json(tokenAndCliente);
+  } catch (e) {
+    return res.status(e.status).json({ message: e.message });
+  }
+}
+
+const UpdateClienteSenha = async (req, res) => {
+  try {
+    const { cpf, senhaAtual, senhaNova } = req.body;
+    await clienteService.updateClienteSenha(cpf, senhaAtual, senhaNova);
+    return res.sendStatus(200);
   } catch (e) {
     return res.status(e.status).json({ message: e.message });
   }
@@ -59,6 +69,7 @@ module.exports = {
   GetClientes,
   GetClienteById,
   CreateCliente,
+  UpdateClienteSenha,
   UpdateInfosCliente,
   DeleteCliente,
 };

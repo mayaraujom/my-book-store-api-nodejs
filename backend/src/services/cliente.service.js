@@ -26,13 +26,21 @@ const getClienteByCpf = async (cpf) => {
 const createCliente = async (body) => {
   const { nome, email, senha, ddd1, telefone1, cpf, rua, numero, bairro, cidade, estado, cep } = body;
 
-  const exist = await Cliente.findOne({ where: { cpf } });
-  if (exist) throw { status: 400, message: 'Já existe um usuário cadastrado com esse número de CPF' };
-
-  await Cliente.create({ nome, email, senha, ddd1, telefone1, cpf, rua, numero, bairro, cidade, estado, cep });
+  const created = await Cliente.create({ nome, email, senha, ddd1, telefone1, cpf, rua, numero, bairro, cidade, estado, cep });
   const payload = { cpf, nome, email };
-  return generateToken(payload);
+  const token = generateToken(payload);
+  return { token, cliente: created };
 };
+
+const updateClienteSenha = async (cpf, senhaAtual, senhaNova) => {
+  const cliente = await Cliente.findOne({ where: { cpf, }, attributes: { include: ['senha'] } });
+
+  if (cliente.dataValues.senha !== senhaAtual) throw { status: 400, message: 'Senha atual incorreta' };
+
+  await Cliente.update({ senha: senhaNova }, { where: { cpf } });
+
+  return;
+}
 
 const updateInfosCliente = async (id, body) => {
   const { nome, ddd1, telefone1, rua, numero, bairro, cidade, estado, cep } = body;
@@ -40,7 +48,7 @@ const updateInfosCliente = async (id, body) => {
   await Cliente.update({ nome, ddd1, telefone1, rua, numero, bairro, cidade, estado, cep }, {
     where: { id, },
   });
-  
+
   const clenteUpdated = await getClienteById(id);
   return clenteUpdated;
 };
@@ -54,6 +62,7 @@ module.exports = {
   getClienteById,
   getClienteByCpf,
   createCliente,
+  updateClienteSenha,
   updateInfosCliente,
   deleteCliente
 };

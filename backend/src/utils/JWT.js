@@ -19,21 +19,12 @@ const generateToken = ({ cpf, nome, email }) => {
   return token;
 };
 
-const authenticateToken = (token) => {
-  if (!token) {
-    const message = 'Token not found';
-    const status = 401;
-    return { status, message };
-  }
+const authenticateToken = (token, res) => {
   try {
     const validateToken = jwt.verify(token, JWT_SECRET);
-
     return validateToken;
   } catch (e) {
-    const status = 401;
-    const message = 'Expired or invalid token';
-    const error = { status, message };
-    throw error;
+    throw { e };
   }
 };
 
