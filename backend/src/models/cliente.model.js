@@ -11,7 +11,7 @@ const ClienteSchema = (sequelize, DataTypes) => {
         bairro: DataTypes.STRING,
         cidade: DataTypes.STRING,
         estado: DataTypes.STRING,
-        cep: DataTypes.INTEGER
+        cep: DataTypes.STRING
     },
         {
             tableName: 'clientes',
