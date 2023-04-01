@@ -8,12 +8,7 @@ const getClientes = async () => {
 };
 
 const getClienteById = async (id) => {
-  const cliente = await Cliente.findOne({
-    where: {
-      id,
-    },
-    attributes: { exclude: ['senha'] },
-  });
+  const cliente = await Cliente.findOne({ where: { id }, attributes: { exclude: ['senha'] }, });
 
   if (!cliente) throw { status: 404, message: 'Cliente não encontrado' };
 
@@ -39,6 +34,17 @@ const createCliente = async (body) => {
   return generateToken(payload);
 };
 
+const updateInfosCliente = async (id, body) => {
+  const { nome, ddd1, telefone1, rua, numero, bairro, cidade, estado, cep } = body;
+
+  await Cliente.update({ nome, ddd1, telefone1, rua, numero, bairro, cidade, estado, cep }, {
+    where: { id, },
+  });
+  
+  const clenteUpdated = await getClienteById(id);
+  return clenteUpdated;
+};
+
 const deleteCliente = async (id) => {
   await Cliente.destroy({ where: { id } });
 };
@@ -48,5 +54,6 @@ module.exports = {
   getClienteById,
   getClienteByCpf,
   createCliente,
+  updateInfosCliente,
   deleteCliente
 };

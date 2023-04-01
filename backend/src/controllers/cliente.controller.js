@@ -35,6 +35,16 @@ const CreateCliente = async (req, res) => {
   }
 }
 
+const UpdateInfosCliente = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updated = await clienteService.updateInfosCliente(id, req.body);
+    return res.status(200).json(updated);
+  } catch (e) {
+    return res.status(400).json({ message: 'Não foi possível atualizar o cliente' });
+  }
+}
+
 const DeleteCliente = async (req, res) => {
   try {
     const { id } = req.params;
@@ -49,5 +59,6 @@ module.exports = {
   GetClientes,
   GetClienteById,
   CreateCliente,
+  UpdateInfosCliente,
   DeleteCliente,
 };

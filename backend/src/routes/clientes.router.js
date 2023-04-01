@@ -6,6 +6,7 @@ const routers = express.Router();
 routers.get('/', clienteController.GetClientes);
 routers.get('/:id', clienteController.GetClienteById);
 routers.post('/cadastrar', clienteController.CreateCliente);
+routers.put('/:id', clienteController.UpdateInfosCliente);
 routers.delete('/:id', clienteController.DeleteCliente);
 
 module.exports = routers;
